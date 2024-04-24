@@ -31,9 +31,10 @@ if(isset($_POST['submit'])) {
     // Insert patient into Patient table
     $age = $_POST['age'];
     $hospitalId = $_POST['hospital_id'];
-    $sql = "INSERT INTO Patient (User_ID, Age, Hospital_Id) VALUES (:userId, :age, :hospitalId)";
+    $sql = "INSERT INTO Patient (User_ID, Blood_Group, Age, Hospital_Id) VALUES (:userId, :blood_group, :age, :hospitalId)";
     $query = $dbh->prepare($sql);
     $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+    $query->bindParam(':blood_group', $blood_group, PDO::PARAM_INT);
     $query->bindParam(':age', $age, PDO::PARAM_INT);
     $query->bindParam(':hospitalId', $hospitalId, PDO::PARAM_STR);
     $query->execute();
@@ -156,7 +157,21 @@ session_start(); ?>
                                                 <input type="text" id="form3Example1c" class="form-control form-control-lg py-3" name="name" autocomplete="off" placeholder="Enter patient's name" style="border-radius:25px ;" />
                                             </div>
                                         </div>
-
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <div class="form-outline flex-fill mb-0">
+                                                <label class="form-label" for="form3Example10c"><i class="fas fa-tint fa-lg fa-fw"></i> Blood Group</label>
+                                                <select class="form-select form-select-lg" id="form3Example10c" name="blood_group" style="border-radius:25px ;">
+                                                    <option value="A+">A+</option>
+                                                    <option value="A-">A-</option>
+                                                    <option value="B+">B+</option>
+                                                    <option value="B-">B-</option>
+                                                    <option value="AB+">AB+</option>
+                                                    <option value="AB-">AB-</option>
+                                                    <option value="O+">O+</option>
+                                                    <option value="O-">O-</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="age"><i class="bi bi-calendar2"></i> Age</label>
