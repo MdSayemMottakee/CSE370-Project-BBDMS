@@ -18,7 +18,7 @@ try {
     exit(); // Exit the script if the connection fails
 }
 
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$loggedInUserID = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Fetch the current data of the user from the database
 $sql = "SELECT 
@@ -39,7 +39,7 @@ $sql = "SELECT
 
 try {
     $statement = $dbh->prepare($sql);
-    $statement->execute([':id' => $id ]);
+    $statement->execute([':id' => $loggedInUserID ]);
     
     // Fetch the user data
     $person = $statement->fetch(PDO::FETCH_ASSOC);
@@ -80,13 +80,13 @@ try {
         $statement->bindParam(':lastDateOfDonation', $lastDateOfDonation);
         $statement->bindParam(':amountOfBloodDonated', $amountOfBloodDonated);
         $statement->bindParam(':donationFrequency', $donationFrequency);
-        $statement->bindParam(':id', $id);
+        $statement->bindParam(':id', $loggedInUserID);
 
         // Execute the statement
         $statement->execute();
 
         // Redirect to DonorPanel.php after successful update
-        header("Location: DonorPanel.php?user_id=$id");
+        header("Location: DonorPanel.php?user_id=$loggedInUserID");
         exit(); // Ensure no further code is executed after redirection
     }
 } catch (PDOException $e) {
@@ -115,11 +115,11 @@ try {
     <!--// Meta tag Keywords -->
 
     <!-- Custom-Files -->
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
     <!-- Bootstrap-Core-CSS -->
-    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css" media="all" />
     <!-- Style-CSS -->
-    <link rel="stylesheet" href="css/fontawesome-all.css">
+    <link rel="stylesheet" href="../css/fontawesome-all.css">
     <!-- Font-Awesome-Icons-CSS -->
     <!-- //Custom-Files -->
 
@@ -133,6 +133,54 @@ try {
 </head>
 
 <body>
+<!-- header -->
+<div id="home">
+    <!-- navigation -->
+    <div class="main-top py-1">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-navi">
+            <div class="container">
+                <!-- logo -->
+                <h1>
+                    <a class="navbar-brand font-weight-bold font-italic" href="DonorPanel.php?user_id=<?php echo $loggedInUserID; ?>">
+                        <span>BB</span>DMS
+                        <i class="fas fa-syringe"></i>
+                    </a>
+                </h1>
+                <!-- //logo -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="breadcrumb-agile">
+                    <div aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="DonorPanel.php?user_id=<?php echo $loggedInUserID; ?>">Home</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Donor Profile</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
+                    <a href="../Deal/request-received.php?user_id=<?php echo $loggedInUserID; ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                        <i class="fas fa-user-plus mr-2"></i>Request Received
+                    </a>
+                    <a href="contact.php?user_id=<?php echo $loggedInUserID; ?>" class="ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                        <i class="fas fa-user-plus mr-2"></i>Contact Us
+                    </a>
+                    <a href="../logout.php" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3 logout-button">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Log Out
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- banner 2 -->
+    <div class="inner-banner-w3ls">
+        <div class="container">
+        </div>
+    </div>
 <div class="container">
   <div class="card mt-5">
     <div class="card-header">

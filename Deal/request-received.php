@@ -18,8 +18,10 @@ try {
     echo "Connection failed: " . $e->getMessage();
 }
 
-// Get the donor user ID from the session
+
+// Ensure correct retrieval and assignment of user ID
 $donorUserId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
+
 
 // Fetch patient details if necessary
 $result = [];
@@ -112,7 +114,7 @@ try {
             <div class="container">
                 <!-- logo -->
                 <h1>
-                    <a class="navbar-brand font-weight-bold font-italic" href="../Donor/DonorPanel.php?user_id=<?php echo $loggedInUserID; ?>">
+                    <a class="navbar-brand font-weight-bold font-italic" href="../Donor/DonorPanel.php?user_id=<?php echo $donorUserId; ?>">
                         <span>BB</span>DMS
                         <i class="fas fa-syringe"></i>
                     </a>
@@ -126,17 +128,17 @@ try {
                     <div aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="DonorPanel.php?user_id=<?php echo $loggedInUserID; ?>">Home</a>
+                                <a href="../Donor/DonorPanel.php?user_id=<?php echo $donorUserId; ?>">Home</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Donor Profile</li>
                         </ol>
                     </div>
                 </div>
                 <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
-                    <a href="../request-received.php?user_id=<?php echo $loggedInUserID; ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                    <a href="../request-received.php?user_id=<?php echo $donorUserId; ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
                         <i class="fas fa-user-plus mr-2"></i>Request Received
                     </a>
-                    <a href="contact.php?user_id=<?php echo $loggedInUserID; ?>" class="ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                    <a href="contact.php?user_id=<?php echo $donorUserId; ?>" class="ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
                         <i class="fas fa-user-plus mr-2"></i>Contact Us
                     </a>
                     <a href="../logout.php" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3 logout-button">
