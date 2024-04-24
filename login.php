@@ -2,14 +2,6 @@
 session_start();
 include('includes/config.php');
 
-// Establish database connection
-$conn = mysqli_connect('localhost', 'root', '', 'bbdms');
-
-// Check if the connection was successful
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
 if(isset($_POST['login'])) 
 {
     $sql = "SELECT * FROM `login` WHERE `Username`=?";

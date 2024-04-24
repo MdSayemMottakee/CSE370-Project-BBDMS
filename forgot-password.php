@@ -22,6 +22,11 @@ if(isset($_POST['submit'])) {
 
     if($query->rowCount() > 0) {
         if($newpassword === $confirmpassword) {
+            // Check password complexity
+            if(!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $newpassword)) {
+                echo "<script>alert('Password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character.');</script>";
+                exit;
+            }
             // Update password if user exists
             $hashed_password = md5($newpassword);
 
@@ -116,7 +121,7 @@ if(isset($_POST['submit'])) {
                         <a href="index.php" class="btn btn-link">Sign in</a>
                     </form>
                     <div class="card-footer text-center" style="padding-top: 30px;">
-                        <div class="small"><a href="../index.php" class="btn btn-primary">Back to Home</a></div>
+                        <div class="small"><a href="index.php" class="btn btn-primary">Back to Home</a></div>
                     </div>
                 </div>
             </div>

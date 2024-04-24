@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				// Insert successful
 				echo "Payment and time of need records inserted successfully.";
 				// Redirect to PatientPanel.php with the user ID of the patient
-				header("Location: PatientPanel.php?user_id=" . $patientUserId);
+				header("Location: ../Patient/PatientPanel.php?user_id=" . $patientUserId);
 				exit(); // Make sure to exit after redirecting
 			} else {
 				// Insert failed for SecondLookingFor

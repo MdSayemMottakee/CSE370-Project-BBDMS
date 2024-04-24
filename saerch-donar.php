@@ -110,20 +110,32 @@
                                     $bloodgroup=$_POST['bloodgroup'];
                                     $location=$_POST['location']; 
 
-                                    $sql = "SELECT d.*, 
-                                            MAX(dc.Contact) AS Contact, u.Name, 
-                                            MAX(p.Preferred_Donation_Center) AS Preferred_Donation_Center, 
-                                            MAX(r.Remarks) AS Remarks, 
-                                            dl1.Last_Date_Of_Donation AS Last_Date_Of_Donation, 
-                                            dl2.Donation_Frequency AS Donation_Frequency 
-                                            FROM Donor d 
-                                            LEFT JOIN DonorContact dc ON d.User_ID = dc.User_ID 
-                                            LEFT JOIN Preference p ON d.User_ID = p.User_ID 
-                                            LEFT JOIN Remark r ON d.User_ID = r.User_ID 
-                                            LEFT JOIN Donation_Log_1 dl1 ON d.User_ID = dl1.User_ID 
-                                            LEFT JOIN Donation_Log_2 dl2 ON d.User_ID = dl2.User_ID 
-                                            LEFT JOIN User u ON d.User_ID = u.User_ID 
-                                            WHERE (Blood_Group=:bloodgroup) OR (City=:location)";
+                                    $sql = "SELECT 
+                                    d.*, 
+                                    GROUP_CONCAT(dc.Contact) AS Contact, 
+                                    u.Name, 
+                                    GROUP_CONCAT(p.Preferred_Donation_Center) AS Preferred_Donation_Center, 
+                                    GROUP_CONCAT(r.Remarks) AS Remarks, 
+                                    dl1.Last_Date_Of_Donation AS Last_Date_Of_Donation, 
+                                    dl2.Donation_Frequency AS Donation_Frequency 
+                                FROM 
+                                    Donor d 
+                                LEFT JOIN 
+                                    DonorContact dc ON d.User_ID = dc.User_ID 
+                                LEFT JOIN 
+                                    Preference p ON d.User_ID = p.User_ID 
+                                LEFT JOIN 
+                                    Remark r ON d.User_ID = r.User_ID 
+                                LEFT JOIN 
+                                    Donation_Log_1 dl1 ON d.User_ID = dl1.User_ID 
+                                LEFT JOIN 
+                                    Donation_Log_2 dl2 ON d.User_ID = dl2.User_ID 
+                                LEFT JOIN 
+                                    User u ON d.User_ID = u.User_ID 
+                                WHERE 
+                                    (Blood_Group=:bloodgroup) AND (City=:location) 
+                                GROUP BY 
+                                    d.User_ID;";
                                     $query = $dbh->prepare($sql);
                                     $query->bindParam(':status',$status,PDO::PARAM_STR);
                                     $query->bindParam(':bloodgroup',$bloodgroup,PDO::PARAM_STR);
@@ -148,7 +160,7 @@
                                                     <p class="card-text"><b>Mobile No :</b> <?php echo htmlentities($result->Contact);?></p>
                                                     <p class="card-text"><b>Age :</b> <?php echo htmlentities($result->Age);?></p>
                                                     <p class="card-text"><b>Address :</b> <?php echo htmlentities($result->City);?></p>
-                                                    <a class="w3ls-button-agile"  href="contact-blood.php?cid=<?php echo $result->User_ID;?>">Request</a>
+                                                    
                                                 </div>
                                             </div> 
                                 <?php   }

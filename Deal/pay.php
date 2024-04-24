@@ -17,7 +17,7 @@ try {
 
     // Redirect to a success page or display a success message
     echo "<script>alert('Payment completed');</script>";
-    header("Location: ../Patient/PatientPanel.php?user_id=<?php echo htmlentities($user_id); ?>");
+    header("Location: ../Patient/PatientPanel.php?user_id=" . htmlentities($user_id));
     exit();
 } catch (PDOException $e) {
     // Handle database errors

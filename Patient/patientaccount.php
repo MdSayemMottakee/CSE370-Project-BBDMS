@@ -7,66 +7,88 @@ if(isset($_POST['submit'])) {
     $name = $_POST['name'];
     $email = $_POST['username'];
     $password = md5($_POST['password']); // Hash password
-    $role = 'Donor';
+    $role = 'Patient';
     $perId = 4;
+    // Check if the same username and password exist in the database
+    $sqlCheck = "SELECT COUNT(*) as count FROM LogIn WHERE Username = :username AND Password = :password";
+    $queryCheck = $dbh->prepare($sqlCheck);
+    $queryCheck->bindParam(':username', $email, PDO::PARAM_STR);
+    $queryCheck->bindParam(':password', $password, PDO::PARAM_STR);
+    $queryCheck->execute();
+    $result = $queryCheck->fetch(PDO::FETCH_ASSOC);
+
+    if($result['count'] > 0) {
+        // Alert user to change the password if same username and password exist
+        echo '<script>alert("Please choose a different username or password.");</script>';
+    } else {
+        // Insert user into User table
+        $sql = "INSERT INTO LogIn (Username, Password) VALUES (:username, :password)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':username', $email, PDO::PARAM_STR);
+        $query->bindParam(':password', $password, PDO::PARAM_STR);
+        $query->execute();
+        $logId = $dbh->lastInsertId(); // Get last inserted LogID
     
-    // Insert user into User table
-    $sql = "INSERT INTO LogIn (Username, Password) VALUES (:username, :password)";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':username', $email, PDO::PARAM_STR);
-    $query->bindParam(':password', $password, PDO::PARAM_STR);
-    $query->execute();
-    $logId = $dbh->lastInsertId(); // Get last inserted LogID
-     
-    // Insert user into User table
-    $sql = "INSERT INTO User (Name, Role, LogID, Per_ID) VALUES (:name, :role, :logId, :perId)";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':name', $name, PDO::PARAM_STR);
-    $query->bindParam(':role', $role, PDO::PARAM_STR);
-    $query->bindParam(':logId', $logId, PDO::PARAM_INT);
-    $query->bindParam(':perId', $perId, PDO::PARAM_INT);
-    $query->execute();
-    $userId = $dbh->lastInsertId(); // Get last inserted UserID
-    
-    // Insert patient into Patient table
-    $age = $_POST['age'];
-    $hospitalId = $_POST['hospital_id'];
-    $sql = "INSERT INTO Patient (User_ID, Blood_Group, Age, Hospital_Id) VALUES (:userId, :blood_group, :age, :hospitalId)";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':userId', $userId, PDO::PARAM_INT);
-    $query->bindParam(':blood_group', $blood_group, PDO::PARAM_INT);
-    $query->bindParam(':age', $age, PDO::PARAM_INT);
-    $query->bindParam(':hospitalId', $hospitalId, PDO::PARAM_STR);
-    $query->execute();
+        // Insert user into User table
+        $sql = "INSERT INTO User (Name, Role, LogID, Per_ID) VALUES (:name, :role, :logId, :perId)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':name', $name, PDO::PARAM_STR);
+        $query->bindParam(':role', $role, PDO::PARAM_STR);
+        $query->bindParam(':logId', $logId, PDO::PARAM_INT);
+        $query->bindParam(':perId', $perId, PDO::PARAM_INT);
+        $query->execute();
+        $userId = $dbh->lastInsertId(); // Get last inserted UserID
+        
+        // Insert patient into Patient table
+        $blood_group = $_POST['blood_group'];
+        $age = $_POST['age'];
+        $hospitalId = $_POST['hospital_id'];
+        $sql = "INSERT INTO Patient (User_ID, Blood_Group, Age, Hospital_Id) VALUES (:userId, :blood_group, :age, :hospitalId)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $query->bindParam(':blood_group', $blood_group, PDO::PARAM_INT);
+        $query->bindParam(':age', $age, PDO::PARAM_INT);
+        $query->bindParam(':hospitalId', $hospitalId, PDO::PARAM_STR);
+        $query->execute();
 
-    // Insert issue into Issue table
-    $issue = $_POST['issue'];
-    $sql = "INSERT INTO Issue (User_ID, Issues) VALUES (:userId, :issue)";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':userId', $userId, PDO::PARAM_INT);
-    $query->bindParam(':issue', $issue, PDO::PARAM_STR);
-    $query->execute();
+        // Insert issue into Issue table
+        $issue = $_POST['issue'];
+        $sql = "INSERT INTO Issue (User_ID, Issues) VALUES (:userId, :issue)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $query->bindParam(':issue', $issue, PDO::PARAM_STR);
+        $query->execute();
 
-    // Insert emergency contact into EmergencyContact table
-    $emergencyContactName = $_POST['emergency_contact_name'];
-    $relationship = $_POST['relationship'];
-    $emergencyContact = $_POST['emergency_contact'];
-    $sql = "INSERT INTO EmergencyContact (User_ID, Contact_ID, Relationship) VALUES (:userId, :emergencyContact, :relationship)";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':userId', $userId, PDO::PARAM_INT);
-    $query->bindParam(':emergencyContact', $emergencyContact, PDO::PARAM_STR);
-    $query->bindParam(':relationship', $relationship, PDO::PARAM_STR);
-    $query->execute();
+        // Insert emergency contact into EmergencyContact table
+        $emergencyContactName = $_POST['emergency_contact_name'];
+        $relationship = $_POST['relationship'];
+        $emergencyContact = $_POST['emergency_contact'];
+        $sql = "INSERT INTO EmergencyContact (User_ID, Contact, Relationship) VALUES (:userId, :emergencyContact, :relationship)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $query->bindParam(':emergencyContact', $emergencyContact, PDO::PARAM_STR);
+        $query->bindParam(':relationship', $relationship, PDO::PARAM_STR);
+        $query->execute();
 
-    // Insert additional contact into PatientContact table
-    // You need to implement this part based on your requirements.
+        // Insert contact name into ContactName table
+        $contactId = $dbh->lastInsertId(); // Get last inserted Contact_ID
+        $sql = "INSERT INTO ContactName (Contact_ID, Name) VALUES (:contactId, :emergencyContactName)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':contactId', $contactId, PDO::PARAM_INT);
+        $query->bindParam(':emergencyContactName', $emergencyContactName, PDO::PARAM_STR);
+        $query->execute();
 
-    // Insert contact name into ContactName table
-    // You need to implement this part based on your requirements.
+        // Insert into PatientContact table
+        $sql = "INSERT INTO PatientContact (User_ID, Contact) VALUES (:userId, :emergencyContact)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $query->bindParam(':emergencyContact', $emergencyContact, PDO::PARAM_STR);
+        $query->execute();
 
     // Redirect to login page after successful registration
-    header("Location: ../index.php");
-    exit();
+        header("Location: ../index.php");
+        exit();
+    }
 }
 ?>
 
@@ -216,7 +238,7 @@ session_start(); ?>
                                         <button type="submit" class="btn btn-primary submit mb-4" name="submit">Register</button>
                                     </form>
 
-                                    <p align="center">I already have an account <a href="index.php" class="text-warning" style="font-weight:600; text-decoration:none;">Login</a></p>
+                                    <p align="center">I already have an account <a href="../index.php" class="text-warning" style="font-weight:600; text-decoration:none;">Login</a></p>
                                 </div>
                                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 

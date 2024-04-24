@@ -1,15 +1,28 @@
 <?php
 session_start();
 error_reporting(0);
-include('includes/config.php');
-if(strlen($_SESSION['alogin']) == 0) {    
-    header('location:../index.php');
-} else {
-    // Code for change password    
-    if(isset($_POST['submit'])) {
-        $password = md5($_POST['password']);
-        $newpassword = md5($_POST['newpassword']);
-        $username = $_SESSION['alogin'];
+// Code for change password    
+if(isset($_POST['submit'])) {
+    $password = md5($_POST['password']);
+    $newpassword = md5($_POST['newpassword']);
+    $username = $_SESSION['alogin'];
+
+    // Regular expressions to check for required characters
+    $uppercaseRegex = '/[A-Z]/';
+    $lowercaseRegex = '/[a-z]/';
+    $specialCharRegex = '/[@#!%]/';
+    $numberRegex = '/[0-9]/';
+
+    if(preg_match_all($uppercaseRegex, $_POST['newpassword']) < 1) {
+        $error = "New password must contain at least one uppercase letter.";
+    } elseif(preg_match_all($lowercaseRegex, $_POST['newpassword']) < 1) {
+        $error = "New password must contain at least one lowercase letter.";
+    } elseif(preg_match_all($specialCharRegex, $_POST['newpassword']) < 1) {
+        $error = "New password must contain at least one special character (@, #, !, %).";
+    } elseif(preg_match_all($numberRegex, $_POST['newpassword']) < 1) {
+        $error = "New password must contain at least one number.";
+    } else {
+        // Password meets the criteria, proceed with changing it
         $sql = "SELECT Password FROM login WHERE UserName=:username and Password=:password";
         $query = $dbh->prepare($sql);
         $query->bindParam(':username', $username, PDO::PARAM_STR);
@@ -29,6 +42,7 @@ if(strlen($_SESSION['alogin']) == 0) {
     }
 }
 ?>
+
 
 <!doctype html>
 <html lang="en" class="no-js">
@@ -123,7 +137,7 @@ if(strlen($_SESSION['alogin']) == 0) {
                             </div>
                         </form>
                         <div class="card-footer text-center" style="padding-top: 30px;">
-                            <div class="small"><a href="../index.php" class="btn btn-primary">Back to Home</a></div>
+                            <div class="small"><a href="index.php" class="btn btn-primary">Back to Home</a></div>
                         </div>
                     </div>
                 </div>

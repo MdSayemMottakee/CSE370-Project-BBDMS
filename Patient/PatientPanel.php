@@ -15,7 +15,8 @@ else{
     // Query to select patient details for the logged-in user
     $sql = "SELECT 
                 u.User_ID, 
-                u.Name, 
+                u.Name,
+                p.Blood_Group, 
                 p.Age, 
                 p.Hospital_Id, 
                 GROUP_CONCAT(Issues SEPARATOR ', ') AS HealthIssues, 
@@ -189,7 +190,7 @@ else{
                         <!-- Right column for other details -->
                         <div class="price-bottom p-4 border rounded mb-3">
                             <div class="profile-info">
-                                <!-- Other details -->
+                                <p><strong>BLood Group:</strong> <?php echo htmlentities($result->Blood_Group); ?></p>
                                 <p><strong>Age:</strong> <?php echo htmlentities($result->Age); ?></p>
                                 <p><strong>Hospital ID:</strong> <?php echo htmlentities($result->Hospital_Id); ?></p>
                                 <p><strong>Health Issues:</strong> <?php echo htmlentities($result->HealthIssues); ?></p>
