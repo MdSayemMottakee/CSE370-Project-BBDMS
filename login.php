@@ -195,10 +195,10 @@ session_start(); ?>
 				    </div>
 				</form><br>
                     <p align="center">I don't have any account 
-                        <a href="donoraccount.php">
+                        <a href="Donor/donoraccount.php">
                             <i class="fas fa-user-plus mr-2"></i>Create Donor Account</a></p>
                     <p align="center">
-                        <a href="hospitalstaffaccount.php">
+                        <a href="Hospital/hospitalstaffaccount.php">
                             <i class="fas fa-user-plus mr-2"></i>Create Hospital Staff Account</a>
                     </p>
 					<p class="account-w3ls text-center pb-4" style="color:#000">
