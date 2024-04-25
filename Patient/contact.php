@@ -30,7 +30,7 @@ if(isset($_POST['send'])) {
 <html lang="zxx">
 
 <head>
-	<title>Hospital Staff Management System | Contact Us </title>
+	<title>Patient Management System | Contact Us </title>
 	<!-- Meta tag Keywords -->
 	
 	<script>
@@ -68,7 +68,7 @@ if(isset($_POST['send'])) {
             <div class="container">
                 <!-- logo -->
                 <h1>
-                    <a class="navbar-brand font-weight-bold font-italic" href="HaospitalPanel.php?hospital_id=<?php echo $hospitalID;?>">
+                    <a class="navbar-brand font-weight-bold font-italic" href="PatientPanel.php?user_id=<?php echo htmlentities($loggedInUserID); ?>">
                         <span>BB</span>DMS
                         <i class="fas fa-syringe"></i>
                     </a>
@@ -82,20 +82,35 @@ if(isset($_POST['send'])) {
                     <div aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="HaospitalPanel.php?hospital_id=<?php echo $hospitalID;?>">Home</a>
+                            <a href="PatientPanel.php?user_id=<?php echo htmlentities($loggedInUserID); ?>">Home</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Hospital Staff Profile</li>
+                            <li class="breadcrumb-item active" aria-current="page">Patient Profile</li>
                         </ol>
                     </div>
                 </div>
                 <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
-                    <a href="bloodbank.php?hospital_id=<?php echo $hospitalID; ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
-                        <i class="fas fa-user-plus mr-2"></i>Blood Bank
+                    <a href="donor-list.php?user_id=<?php echo htmlentities($loggedInUserID); ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Donor List
                     </a>
-                    <a href="../Patient/patientaccount.php" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
-                        <i class="fas fa-user-plus mr-2"></i>Create patient account
+                    <a href="../Deal/request.php?user_id=<?php echo htmlentities($loggedInUserID); ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Request
                     </a>
-                    <a href="../contact.php?user_id=<?php echo $loggedInUserID; ?>" class="ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                    <?php
+                    // Check if the amount is 0 in Payment
+                    $sqlCheckAmount = "SELECT * FROM Payment WHERE PuserID = :user_id AND Amount = 0";
+                    $stmtCheckAmount = $dbh->prepare($sqlCheckAmount);
+                    $stmtCheckAmount->bindParam(':user_id', $loggedInUserID, PDO::PARAM_INT);
+                    $stmtCheckAmount->execute();
+                    $paymentCount = $stmtCheckAmount->rowCount();
+                    ?>
+
+                    <!-- Display the "Payment" button only when the amount is 0 -->
+                    <?php if ($paymentCount > 0) : ?>
+                        <a href="../Deal/payment.php?user_id=<?php echo htmlentities($loggedInUserID); ?>" class="btn ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Payment
+                        </a>
+                    <?php endif; ?>
+                    <a href="contact.php?user_id=<?php echo $loggedInUserID; ?>" class="ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
                         <i class="fas fa-user-plus mr-2"></i>Contact Us
                     </a>
                     <a href="../logout.php" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3 logout-button">

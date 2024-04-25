@@ -182,15 +182,10 @@ session_start(); ?>
                                             </div>
                                         </div>
 
-                                        <div id="hospital_details">
-                                            <label>Name: <?php echo $result['Name']; ?></label><br>
-                                            <label>Street: <?php echo $result['Street']; ?></label><br>
-                                            <label>City: <?php echo $result['City']; ?></label><br>
-                                        </div>
                                         <button type="submit" class="btn btn-primary submit mb-4" name="submit">Register</button>
                                     </form>
 
-                                    <p align="center">I already have an account <a href="index.php" class="text-warning" style="font-weight:600; text-decoration:none;">Login</a></p>
+                                    <p align="center">I already have an account <a href="../index.php" class="text-warning" style="font-weight:600; text-decoration:none;">Login</a></p>
                                 </div>
                                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 

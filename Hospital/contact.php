@@ -1,7 +1,7 @@
 <?php
 session_start();
 error_reporting(0);
-$UserId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
+$loggedInUserID = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
 
 include('../includes/config.php');
 
@@ -12,13 +12,13 @@ if(isset($_POST['send'])) {
     $sql = "INSERT INTO  tblcontactusquery(User_ID, Message, PostingDate) VALUES(:userID, :message, :postingDate)";
     $query = $dbh->prepare($sql);
     $query->bindParam(':message', $message, PDO::PARAM_STR);
-    $query->bindParam(':userID', $UserId, PDO::PARAM_INT);
+    $query->bindParam(':userID', $loggedInUserID, PDO::PARAM_INT);
     $query->bindParam(':postingDate', $currentDateTime, PDO::PARAM_STR); // Bind current date and time
     $query->execute();
     $lastInsertId = $dbh->lastInsertId();
     
     if($lastInsertId) {
-        echo '<script>alert("Query Sent. We will contact you shortly."); window.location.href = "DonorPanel.php?user_id=' . urlencode($UserId) . '";</script>';
+        echo '<script>alert("Query Sent. We will contact you shortly."); window.location.href = "HospitalPanel.php?user_id=' . urlencode($loggedInUserID) . '";</script>';
         exit(); // Ensure that script execution stops after redirection
     } else {
         echo "<script>alert('Something went wrong. Please try again.');</script>";  
@@ -68,7 +68,7 @@ if(isset($_POST['send'])) {
             <div class="container">
                 <!-- logo -->
                 <h1>
-                    <a class="navbar-brand font-weight-bold font-italic" href="DonorPanel.php?user_id=<?php echo $loggedInUserID; ?>">
+                    <a class="navbar-brand font-weight-bold font-italic" href="HospitalPanel.php?user_id=<?php echo $loggedInUserID;?>">
                         <span>BB</span>DMS
                         <i class="fas fa-syringe"></i>
                     </a>
@@ -82,15 +82,20 @@ if(isset($_POST['send'])) {
                     <div aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="DonorPanel.php?user_id=<?php echo $loggedInUserID; ?>">Home</a>
+                                <a href="HospitalPanel.php?user_id=<?php echo $loggedInUserID;?>">Home</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Donor Profile</li>
                         </ol>
                     </div>
                 </div>
                 <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
-                    <a href="../Deal/request-received.php?user_id=<?php echo $loggedInUserID; ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
-                        <i class="fas fa-user-plus mr-2"></i>Request Received
+                    <a href="patient-list.php?hospital_id=<?php echo $loggedInUserID; ?>&hospital_id=<?php echo $hospitalID; ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                        <i class="fas fa-user-plus mr-2"></i>patient List
+                    </a>
+                    <a href="bloodbank.php?user_id=<?php echo $loggedInUserID; ?>&hospital_id=<?php echo $hospitalID; ?>" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                        <i class="fas fa-user-plus mr-2"></i>Blood Bank
+                    </a>
+                    <a href="../Patient/patientaccount.php" class="login-button ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
+                        <i class="fas fa-user-plus mr-2"></i>Create patient account
                     </a>
                     <a href="contact.php?user_id=<?php echo $loggedInUserID; ?>" class="ml-lg-3 mt-lg-0 mt-4 mb-lg-0 mb-3">
                         <i class="fas fa-user-plus mr-2"></i>Contact Us

@@ -65,7 +65,7 @@ if(isset($_POST['submit'])) {
     $query->bindParam(':age', $age, PDO::PARAM_INT);
     $query->bindParam(':occupation', $occupation, PDO::PARAM_STR);
     $query->bindParam(':street', $street, PDO::PARAM_STR);
-    $query->bindParam(':city', $city, PDO::PARAM_STR); // Use the city variable here
+    $query->bindParam(':city', $city, PDO::PARAM_STR); 
     $query->bindParam(':bloodGroup', $bloodGroup, PDO::PARAM_STR);
     $query->execute();
     
